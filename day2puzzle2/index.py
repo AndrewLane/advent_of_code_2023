@@ -109,7 +109,6 @@ Game 100: 7 blue, 9 green, 2 red; 5 red, 9 green; 1 blue, 8 red, 13 green"""
 
 
 def parse_line(line):
-
     game_regex = r"^Game (\d+): (.*)$"
     matches = re.match(game_regex, line)
     if not matches:
@@ -126,7 +125,9 @@ def parse_line(line):
             ball_count_regex = r"^(\d+) (.*)$"
             ball_count_matches = re.match(ball_count_regex, ball_count)
             if not ball_count_matches:
-                raise Exception("Invalid line because of inability to parse ball count: " + line)
+                raise Exception(
+                    "Invalid line because of inability to parse ball count: " + line
+                )
             num_balls = int(ball_count_matches.group(1))
             color = ball_count_matches.group(2)
             # print(str(num_balls) + " balls of " + color + "color")
@@ -142,10 +143,12 @@ def parse_line(line):
 
     return power
 
+
 def parse_input(input):
     total = 0
     for line in input.splitlines():
         total += parse_line(line)
     return total
+
 
 print(parse_input(input))

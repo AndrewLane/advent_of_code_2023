@@ -107,6 +107,7 @@ Game 98: 2 blue, 3 green, 6 red; 1 green, 1 blue, 8 red; 8 red, 3 green, 1 blue;
 Game 99: 1 green, 2 red, 1 blue; 8 green, 4 blue, 1 red; 7 blue, 1 red, 11 green; 9 green, 3 blue; 1 red, 2 blue; 1 red, 6 blue
 Game 100: 7 blue, 9 green, 2 red; 5 red, 9 green; 1 blue, 8 red, 13 green"""
 
+
 def parse_line(line, max_allowed_balls):
     # write a regex that will match a line like this: Game X: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
     # and return the groups
@@ -115,7 +116,7 @@ def parse_line(line, max_allowed_balls):
     if not matches:
         raise Exception("Invalid line: " + line)
     game = int(matches.group(1))
-   # print(game)
+    # print(game)
     balls = matches.group(2)
     all_draws = balls.split(";")
     individual_draws = [item.strip() for item in all_draws]
@@ -127,7 +128,9 @@ def parse_line(line, max_allowed_balls):
             ball_count_regex = r"^(\d+) (.*)$"
             ball_count_matches = re.match(ball_count_regex, ball_count)
             if not ball_count_matches:
-                raise Exception("Invalid line because of inability to parse ball count: " + line)
+                raise Exception(
+                    "Invalid line because of inability to parse ball count: " + line
+                )
             num_balls = int(ball_count_matches.group(1))
             color = ball_count_matches.group(2)
             # print(str(num_balls) + " balls of " + color + "color")
@@ -135,16 +138,18 @@ def parse_line(line, max_allowed_balls):
                 raise Exception("Invalid line because of invalid color: " + line)
             if num_balls > max_counts[color]:
                 max_counts[color] = num_balls
-        
+
         for color in ["red", "blue", "green"]:
             if max_counts[color] > max_allowed_balls[color]:
-               return 0
+                return 0
     return game
+
 
 def parse_input(input):
     total = 0
     for line in input.splitlines():
         total += parse_line(line, {"red": 12, "blue": 14, "green": 13})
     return total
+
 
 print(parse_input(input))
