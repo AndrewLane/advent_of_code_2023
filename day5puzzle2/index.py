@@ -1,7 +1,7 @@
 import re
 
 debug = False
-locations_to_try = range(0,10000000)
+locations_to_try = range(0, 10000000)
 print_progress = True
 print_progress_every_x_location_tries = 10000
 
@@ -291,7 +291,6 @@ def debugprint(*args):
 
 
 def map_the_id_backwards(maps, id):
-
     for [dest, src, rng] in maps:
         if id >= dest and id < dest + rng:
             return id - dest + src
@@ -305,8 +304,8 @@ def is_seed_in_seed_ranges(seed, seed_ranges):
             return True
     return False
 
-def get_min_location(seed_ranges, all_maps):
 
+def get_min_location(seed_ranges, all_maps):
     # for seed_range in seed_ranges:
     #     for seed in range(seed_range["min"], seed_range["max"] + 1):
     for location in locations_to_try:
@@ -319,23 +318,35 @@ def get_min_location(seed_ranges, all_maps):
         while done == False:
             for map in all_maps:
                 if map["map_to"] == current_thing_being_translated:
-                    debugprint(f"found {current_thing_being_translated} with id {current_id_being_translated}, now looking for {map['map_from']}...")
-                    current_thing_being_translated = map["map_from"]                    
-                    current_id_being_translated = map_the_id_backwards(map["maps"], current_id_being_translated)
+                    debugprint(
+                        f"found {current_thing_being_translated} with id {current_id_being_translated}, now looking for {map['map_from']}..."
+                    )
+                    current_thing_being_translated = map["map_from"]
+                    current_id_being_translated = map_the_id_backwards(
+                        map["maps"], current_id_being_translated
+                    )
                     debugprint("...which has id", current_id_being_translated)
                     if current_thing_being_translated == target:
-                        if is_seed_in_seed_ranges(current_id_being_translated, seed_ranges):
+                        if is_seed_in_seed_ranges(
+                            current_id_being_translated, seed_ranges
+                        ):
                             return location
                         else:
-                            if print_progress and location % print_progress_every_x_location_tries == 0:
-                                print(f"Location {location} which translates to seed {current_id_being_translated}, does not fit in seed range")
+                            if (
+                                print_progress
+                                and location % print_progress_every_x_location_tries
+                                == 0
+                            ):
+                                print(
+                                    f"Location {location} which translates to seed {current_id_being_translated}, does not fit in seed range"
+                                )
                         done = True
                     else:
-                        continue        
+                        continue
     return None
 
-def parse_input(input):
 
+def parse_input(input):
     got_seeds_match = False
     in_map_mode = False
     map_from = ""
@@ -345,7 +356,7 @@ def parse_input(input):
     for line in input.splitlines():
         seeds_regex = r"^seeds:(.*)$"
         seeds_match = re.match(seeds_regex, line)
-        
+
         if seeds_match:
             got_seeds_match = True
             raw_seeds = seeds_match.group(1)
@@ -355,19 +366,26 @@ def parse_input(input):
                 raise Exception("Expecting even number of seeds")
             seed_ranges = []
             for i in range(0, len(seed_elements), 2):
-                seed_ranges.append({"min":seed_elements[i], "max": seed_elements[i] + seed_elements[i+1] - 1})
+                seed_ranges.append(
+                    {
+                        "min": seed_elements[i],
+                        "max": seed_elements[i] + seed_elements[i + 1] - 1,
+                    }
+                )
         elif not got_seeds_match:
-            raise Exception("Expecting seeds on first line")        
+            raise Exception("Expecting seeds on first line")
         elif line.strip() == "":
             if in_map_mode:
-                all_maps.append({"map_from": map_from, "map_to": map_to, "maps": map_elements})
+                all_maps.append(
+                    {"map_from": map_from, "map_to": map_to, "maps": map_elements}
+                )
                 map_elements = []
             in_map_mode = False
             continue
         else:
             if in_map_mode:
                 three_digits_regex = r"(\d+) (\d+) (\d+)$"
-                digits_match =  re.match(three_digits_regex, line)
+                digits_match = re.match(three_digits_regex, line)
                 if not digits_match:
                     raise Exception(f"Invalid line because expecting 3 digits: {line}")
                 dest = digits_match.group(1)
@@ -377,19 +395,20 @@ def parse_input(input):
                 map_elements.append([int(dest), int(src), int(rng)])
             else:
                 map_regex = r"^(.*)-to-(.*) map:$"
-                map_match =  re.match(map_regex, line)
+                map_match = re.match(map_regex, line)
                 if not map_match:
-                    raise Exception(f"Invalid line because could not parse a map: {line}")
+                    raise Exception(
+                        f"Invalid line because could not parse a map: {line}"
+                    )
                 in_map_mode = True
                 map_from = map_match.group(1)
                 map_to = map_match.group(2)
                 debugprint("found map", map_from, map_to)
-    
+
     all_maps.append({"map_from": map_from, "map_to": map_to, "maps": map_elements})
 
     debugprint("all_maps", all_maps)
     return get_min_location(seed_ranges, all_maps)
 
-    
 
 print(parse_input(input))

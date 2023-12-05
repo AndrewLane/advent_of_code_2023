@@ -307,24 +307,32 @@ def get_min_location(seeds, all_maps):
             debugprint("Starting iteration of all_maps")
             for map in all_maps:
                 if map["map_from"] == current_thing_being_translated:
-                    debugprint(f"found {current_thing_being_translated} with id {current_id_being_translated}, now looking for {map['map_to']}...")
-                    current_thing_being_translated = map["map_to"]                    
-                    current_id_being_translated = map_the_id(map["maps"], current_id_being_translated)
+                    debugprint(
+                        f"found {current_thing_being_translated} with id {current_id_being_translated}, now looking for {map['map_to']}..."
+                    )
+                    current_thing_being_translated = map["map_to"]
+                    current_id_being_translated = map_the_id(
+                        map["maps"], current_id_being_translated
+                    )
                     debugprint("...which has id", current_id_being_translated)
                     if current_thing_being_translated == target:
                         debugprint("found the target")
                         done = True
-                        debugprint(f"seed {original_seed} -> location {current_id_being_translated}")
-                        min_location = current_id_being_translated if min_location is None else min(min_location, current_id_being_translated)
+                        debugprint(
+                            f"seed {original_seed} -> location {current_id_being_translated}"
+                        )
+                        min_location = (
+                            current_id_being_translated
+                            if min_location is None
+                            else min(min_location, current_id_being_translated)
+                        )
                     else:
                         continue
 
-
-        
     return min_location
 
-def parse_input(input):
 
+def parse_input(input):
     got_seeds_match = False
     in_map_mode = False
     map_from = ""
@@ -334,24 +342,26 @@ def parse_input(input):
     for line in input.splitlines():
         seeds_regex = r"^seeds:(.*)$"
         seeds_match = re.match(seeds_regex, line)
-        
+
         if seeds_match:
             got_seeds_match = True
             raw_seeds = seeds_match.group(1)
             seeds = [int(x) for x in raw_seeds.split(" ") if x != ""]
             debugprint("seeds", seeds)
         elif not got_seeds_match:
-            raise Exception("Expecting seeds on first line")        
+            raise Exception("Expecting seeds on first line")
         elif line.strip() == "":
             if in_map_mode:
-                all_maps.append({"map_from": map_from, "map_to": map_to, "maps": map_elements})
+                all_maps.append(
+                    {"map_from": map_from, "map_to": map_to, "maps": map_elements}
+                )
                 map_elements = []
             in_map_mode = False
             continue
         else:
             if in_map_mode:
                 three_digits_regex = r"(\d+) (\d+) (\d+)$"
-                digits_match =  re.match(three_digits_regex, line)
+                digits_match = re.match(three_digits_regex, line)
                 if not digits_match:
                     raise Exception(f"Invalid line because expecting 3 digits: {line}")
                 dest = digits_match.group(1)
@@ -361,19 +371,20 @@ def parse_input(input):
                 map_elements.append([int(dest), int(src), int(rng)])
             else:
                 map_regex = r"^(.*)-to-(.*) map:$"
-                map_match =  re.match(map_regex, line)
+                map_match = re.match(map_regex, line)
                 if not map_match:
-                    raise Exception(f"Invalid line because could not parse a map: {line}")
+                    raise Exception(
+                        f"Invalid line because could not parse a map: {line}"
+                    )
                 in_map_mode = True
                 map_from = map_match.group(1)
                 map_to = map_match.group(2)
                 debugprint("found map", map_from, map_to)
-    
+
     all_maps.append({"map_from": map_from, "map_to": map_to, "maps": map_elements})
 
     debugprint("all_maps", all_maps)
     return get_min_location(seeds, all_maps)
 
-    
 
 print(parse_input(input))
