@@ -164,6 +164,7 @@ def parse_line_for_numbers(line):
         numbers_found.append({"number": number, "index": start, "len": len})
     return numbers_found
 
+
 def parse_line_for_gears(line):
     indexes_of_gears = []
     for match in re.finditer(r"[^\d\.]", line):
@@ -176,23 +177,31 @@ def parse_line_for_gears(line):
 
 
 def get_adjacent_numbers(line_number_index, gear_index, numbers_by_line, total_lines):
-    min_line_range_of_adjacent_number = max(0, line_number_index-1)
-    max_line_range_of_adjacent_number = min(line_number_index+1, total_lines-1)
-    min_index_of_adjacent_number = gear_index-1
-    max_index_of_adjacent_number = gear_index+1
+    min_line_range_of_adjacent_number = max(0, line_number_index - 1)
+    max_line_range_of_adjacent_number = min(line_number_index + 1, total_lines - 1)
+    min_index_of_adjacent_number = gear_index - 1
+    max_index_of_adjacent_number = gear_index + 1
     number_matches = []
     # print(f"Must be between lines {min_line_range_of_adjacent_number} and {max_line_range_of_adjacent_number} and between indexes {min_index_of_adjacent_number} and {max_index_of_adjacent_number}")
-    for line_number in range(min_line_range_of_adjacent_number, max_line_range_of_adjacent_number+1):
+    for line_number in range(
+        min_line_range_of_adjacent_number, max_line_range_of_adjacent_number + 1
+    ):
         numbers_for_this_line = numbers_by_line[line_number]
         for number in numbers_for_this_line:
-            if (number["index"] + number["len"] - 1)>= min_index_of_adjacent_number and number["index"] <= max_index_of_adjacent_number:
+            if (
+                number["index"] + number["len"] - 1
+            ) >= min_index_of_adjacent_number and number[
+                "index"
+            ] <= max_index_of_adjacent_number:
                 number_matches.append(number)
                 # print(f"Found adjacent symbol {symbol_on_this_line} on line {line_number}")
 
     return number_matches
 
+
 gears_by_line = {}
 numbers_found_by_line = {}
+
 
 def parse_input(input):
     index = 0
@@ -201,7 +210,7 @@ def parse_input(input):
         gears_by_line[index] = parse_line_for_gears(line)
         index += 1
     total_lines = index
-    
+
     # print(symbols_by_line)
     # print(numbers_found_by_line)
 
@@ -209,12 +218,14 @@ def parse_input(input):
     for i in range(total_lines):
         for gear in gears_by_line[i]:
             # print(f"Processing {gear} on line {i}")
-            adjacent_numbers=  get_adjacent_numbers(i, gear, numbers_found_by_line, total_lines)
+            adjacent_numbers = get_adjacent_numbers(
+                i, gear, numbers_found_by_line, total_lines
+            )
             if len(adjacent_numbers) == 2:
                 # print(f"Found two adjacent numbers {adjacent_numbers[0]['number']} and {adjacent_numbers[1]['number']} on line {i}")
-                total += adjacent_numbers[0]['number'] * adjacent_numbers[1]['number']
+                total += adjacent_numbers[0]["number"] * adjacent_numbers[1]["number"]
             # else:
-                # print(f"Only found {len(adjacent_numbers)} adjacent numbers")
+            # print(f"Only found {len(adjacent_numbers)} adjacent numbers")
 
     return total
 

@@ -153,6 +153,7 @@ input = """......124..................418.......587......770...........672......
 ......*.....81.....*.....636.......317...*...................899.............*....*698............626....................-..+..@.......*....
 .......877......256.714...................825.........458....................869..............................54............28.823..110....."""
 
+
 def parse_line_for_numbers(line):
     numbers_found = []
     for match in re.finditer(r"\d+", line):
@@ -162,6 +163,7 @@ def parse_line_for_numbers(line):
         # print(f"Found {number} at {start} and len is {len}")
         numbers_found.append({"number": number, "index": start, "len": len})
     return numbers_found
+
 
 def parse_line_for_symbols(line):
     indexes_of_symbols = []
@@ -173,24 +175,33 @@ def parse_line_for_symbols(line):
     return indexes_of_symbols
 
 
-def is_there_an_adjacent_symbol(number, symbols_by_line, total_lines, line_number_index):
-    min_line_range_of_adjacent_symbol = max(0, line_number_index-1)
-    max_line_range_of_adjacent_symbol = min(line_number_index+1, total_lines-1)
-    min_index_of_adjacent_symbol = number["index"]-1
-    max_index_of_adjacent_symbol = number["index"]+number["len"]
+def is_there_an_adjacent_symbol(
+    number, symbols_by_line, total_lines, line_number_index
+):
+    min_line_range_of_adjacent_symbol = max(0, line_number_index - 1)
+    max_line_range_of_adjacent_symbol = min(line_number_index + 1, total_lines - 1)
+    min_index_of_adjacent_symbol = number["index"] - 1
+    max_index_of_adjacent_symbol = number["index"] + number["len"]
     # print(f"Must be between lines {min_line_range_of_adjacent_symbol} and {max_line_range_of_adjacent_symbol} and between indexes {min_index_of_adjacent_symbol} and {max_index_of_adjacent_symbol}")
-    for line_number in range(min_line_range_of_adjacent_symbol, max_line_range_of_adjacent_symbol+1):
+    for line_number in range(
+        min_line_range_of_adjacent_symbol, max_line_range_of_adjacent_symbol + 1
+    ):
         symbols_for_this_line = symbols_by_line[line_number]
         for symbol_on_this_line in symbols_for_this_line:
-            if symbol_on_this_line >= min_index_of_adjacent_symbol and symbol_on_this_line <= max_index_of_adjacent_symbol:
+            if (
+                symbol_on_this_line >= min_index_of_adjacent_symbol
+                and symbol_on_this_line <= max_index_of_adjacent_symbol
+            ):
                 # print(f"Found adjacent symbol {symbol_on_this_line} on line {line_number}")
                 return True
 
     # print(f"No symbol found for {number} on line {line_number_index}")
     return False
 
+
 symbols_by_line = {}
 numbers_found_by_line = {}
+
 
 def parse_input(input):
     index = 0
@@ -199,7 +210,7 @@ def parse_input(input):
         symbols_by_line[index] = parse_line_for_symbols(line)
         index += 1
     total_lines = index
-    
+
     # print(symbols_by_line)
     # print(numbers_found_by_line)
 
