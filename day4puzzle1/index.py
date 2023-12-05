@@ -233,12 +233,15 @@ Card 221: 78 17 79  4 63 65 56 57 22 92 | 48 94 32 37 26 58 64 87 24 95 19 41 12
 Card 222: 74 14 52 95 73 11 55 26 90 78 | 17 21 93 28 90 61 63 50 19 57 91 66 86 79 62 41  3 23 75 15 56 18 92 83 49
 Card 223: 98 82 47 14  2 48  1 50 18 62 | 67 78 16 58 35 87 93 44 77 13 74 34 32 92 88 54 36 61 91 72  9 59 89 73  5"""
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
 
+
 def parse_list_of_numbers(list_of_numbers):
-   return [int(number.strip()) for number in list_of_numbers.split(" ") if number]
+    return [int(number.strip()) for number in list_of_numbers.split(" ") if number]
+
 
 def parse_line(line):
     scratchcard_regex = r"^Card\s+(\d+):\s+(.*)\|\s(.*)$"
@@ -249,17 +252,21 @@ def parse_line(line):
     card_number = matches.group(1)
     winning_numbers = parse_list_of_numbers(matches.group(2))
     card = parse_list_of_numbers(matches.group(3))
-    debugprint(f"Card {card_number} has winning numbers {winning_numbers} and numbers {card}")
+    debugprint(
+        f"Card {card_number} has winning numbers {winning_numbers} and numbers {card}"
+    )
     number_matches = len([number for number in card if number in winning_numbers])
     debugprint(f"Card {card_number} has {number_matches} matches")
     if number_matches == 0:
         return 0
     return pow(2, number_matches - 1)
 
+
 def parse_input(input):
     total = 0
     for line in input.splitlines():
         total += parse_line(line)
     return total
+
 
 print(parse_input(input))
