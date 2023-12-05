@@ -1001,8 +1001,19 @@ ncqpkzh5twooneoneqfxlqbjjhqsrlkhvdnvtbzpcbj
 449three45three
 """
 
+
 def find_first_number(line, left_to_right):
-    spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+    spelled_out_numbers = [
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+    ]
     if not left_to_right:
         spelled_out_numbers = [number[::-1] for number in spelled_out_numbers]
     replacement_dict = {
@@ -1014,7 +1025,7 @@ def find_first_number(line, left_to_right):
         "six": "6",
         "seven": "7",
         "eight": "8",
-        "nine": "9"
+        "nine": "9",
     }
     best_index_so_far = len(line)
     candidate_number = ""
@@ -1022,7 +1033,9 @@ def find_first_number(line, left_to_right):
         index = line.find(spelled_out_number)
         if index != -1 and index < best_index_so_far:
             best_index_so_far = index
-            candidate_number = replacement_dict[spelled_out_number if left_to_right else spelled_out_number[::-1]]
+            candidate_number = replacement_dict[
+                spelled_out_number if left_to_right else spelled_out_number[::-1]
+            ]
     for i in range(len(line)):
         if line[i].isdigit() and i < best_index_so_far:
             return line[i]

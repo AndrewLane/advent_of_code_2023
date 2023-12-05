@@ -1001,6 +1001,7 @@ ncqpkzh5twooneoneqfxlqbjjhqsrlkhvdnvtbzpcbj
 449three45three
 """
 
+
 def find_first_number(line):
     for i in range(len(line)):
         if line[i].isdigit():
