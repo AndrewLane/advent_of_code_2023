@@ -751,9 +751,11 @@ LFS = (CVB, BNJ)
 LBS = (JFV, NKC)
 TLL = (THM, GNR)"""
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
+
 
 def parse_directions_line(line):
     debugprint(f"Parsing line: {line}")
@@ -766,6 +768,7 @@ def parse_directions_line(line):
     debugprint(f"Directions: {directions}")
     return [1 if rightleft == "R" else 0 for rightleft in directions]
 
+
 def parse_node_line(line):
     node_and_right_left = r"^(.{3}) = \((.{3}), (.{3})\)$"
     matches = re.match(node_and_right_left, line)
@@ -777,6 +780,7 @@ def parse_node_line(line):
     right = matches.group(3)
     debugprint(node, left, right)
     return node, left, right
+
 
 def traverse_nodes(nodes, directions):
     current_node = "AAA"
@@ -793,6 +797,7 @@ def traverse_nodes(nodes, directions):
             done = True
 
     return steps
+
 
 def parse_input(input):
     lines = input.splitlines()
