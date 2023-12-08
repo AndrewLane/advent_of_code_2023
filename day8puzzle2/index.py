@@ -747,9 +747,11 @@ LFS = (CVB, BNJ)
 LBS = (JFV, NKC)
 TLL = (THM, GNR)"""
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
+
 
 def parse_directions_line(line):
     debugprint(f"Parsing line: {line}")
@@ -761,6 +763,7 @@ def parse_directions_line(line):
     directions = matches.group(0)
     debugprint(f"Directions: {directions}")
     return [1 if rightleft == "R" else 0 for rightleft in directions]
+
 
 def parse_node_line(line):
     node_and_right_left = r"^(.{3}) = \((.{3}), (.{3})\)$"
@@ -796,6 +799,7 @@ def traverse_nodes(nodes, directions):
 
     debugprint(ghost_loop_lengths)
     return math.lcm(*ghost_loop_lengths)
+
 
 def parse_input(input):
     lines = input.splitlines()
