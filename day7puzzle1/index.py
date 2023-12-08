@@ -1027,6 +1027,7 @@ def parse_line(line):
     bid = int(matches.group(2))
     return cards, bid
 
+
 def individual_card_value(card):
     lookup_dict = {
         "2": 2,
@@ -1041,9 +1042,10 @@ def individual_card_value(card):
         "J": 11,
         "Q": 12,
         "K": 13,
-        "A": 14
+        "A": 14,
     }
     return lookup_dict[card]
+
 
 class HandType(Enum):
     FIVE_OF_A_KIND = 7
@@ -1054,14 +1056,15 @@ class HandType(Enum):
     ONE_PAIR = 2
     HIGH_CARD = 1
 
+
 def calculate_hand_value(hand):
     """Five of a kind, where all five cards have the same label: AAAAA
-Four of a kind, where four cards have the same label and one card has a different label: AA8AA
-Full house, where three cards have the same label, and the remaining two cards share a different label: 23332
-Three of a kind, where three cards have the same label, and the remaining two cards are each different from any other card in the hand: TTT98
-Two pair, where two cards share one label, two other cards share a second label, and the remaining card has a third label: 23432
-One pair, where two cards share one label, and the other three cards have a different label from the pair and each other: A23A4
-High card, where all cards' labels are distinct: 23456"""
+    Four of a kind, where four cards have the same label and one card has a different label: AA8AA
+    Full house, where three cards have the same label, and the remaining two cards share a different label: 23332
+    Three of a kind, where three cards have the same label, and the remaining two cards are each different from any other card in the hand: TTT98
+    Two pair, where two cards share one label, two other cards share a second label, and the remaining card has a third label: 23432
+    One pair, where two cards share one label, and the other three cards have a different label from the pair and each other: A23A4
+    High card, where all cards' labels are distinct: 23456"""
     cards = hand["cards"]
     sorted_cards = "".join(sorted(cards))
 
@@ -1082,14 +1085,16 @@ High card, where all cards' labels are distinct: 23456"""
         type = HandType.ONE_PAIR
     else:
         type = HandType.HIGH_CARD
-    
+
     debugprint(f"Type of {cards} is {type}")
-    total_value = type.value * pow(10, 10) \
-        + individual_card_value(cards[0]) * pow(10, 8) \
-        + individual_card_value(cards[1]) * pow(10, 6) \
-        + individual_card_value(cards[2]) * pow(10, 4) \
-        + individual_card_value(cards[3]) * pow(10, 2) \
+    total_value = (
+        type.value * pow(10, 10)
+        + individual_card_value(cards[0]) * pow(10, 8)
+        + individual_card_value(cards[1]) * pow(10, 6)
+        + individual_card_value(cards[2]) * pow(10, 4)
+        + individual_card_value(cards[3]) * pow(10, 2)
         + individual_card_value(cards[4])
+    )
     debugprint(f"Value of {cards} is {total_value}")
     return total_value
 
@@ -1111,7 +1116,7 @@ def parse_input(input):
         bid = hand["bid"]
         rank = index + 1
         debugprint(f"Hand {hand} with bid {bid} has rank {rank}")
-        total += (rank * bid)
+        total += rank * bid
     return total
 
 
