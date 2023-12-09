@@ -205,31 +205,41 @@ input = """14 23 30 32 26 9 -22 -70 -138 -229 -346 -492 -670 -883 -1134 -1426 -1
 6 30 63 111 201 393 794 1572 2962 5248 8696 13404 19027 24329 26511 20265 -3490 -59222 -168763 -363635 -687675
 15 13 15 38 108 260 538 995 1693 2703 4105 5988 8450 11598 15548 20425 26363 33505 42003 52018 63720"""
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
 
+
 def calculate_difference_array(values):
     return [values[i] - values[i - 1] for i in range(1, len(values))]
+
 
 def extrapolate_previous_sensor_value(sensor_values, depth=0):
     # if all sensor values are the same, extrapolate the previous value as the same
     if len(set(sensor_values)) == 1:
         return sensor_values[0]
     difference_array = calculate_difference_array(sensor_values)
-    value = sensor_values[0] - extrapolate_previous_sensor_value(difference_array, depth+1)
+    value = sensor_values[0] - extrapolate_previous_sensor_value(
+        difference_array, depth + 1
+    )
     return value
+
 
 def parse_line(line):
     return [int(x.strip()) for x in line.split(" ") if x != ""]
+
 
 def parse_input(input):
     total = 0
     for line in input.splitlines():
         sensor_values = parse_line(line)
         next_sensor_value = extrapolate_previous_sensor_value(sensor_values)
-        debugprint(f"if sensor values are {sensor_values}, next_sensor_value: {next_sensor_value}")
+        debugprint(
+            f"if sensor values are {sensor_values}, next_sensor_value: {next_sensor_value}"
+        )
         total += next_sensor_value
     return total
+
 
 print(parse_input(input))
