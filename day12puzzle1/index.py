@@ -1011,15 +1011,16 @@ input = """??#??#????## 2,7
 ???#???.?#?????? 1,4,2,2,1
 .#?????..???????.? 6,7"""
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
+
 
 def is_valid(springs, counts):
     grouped_items = [list(g) for _, g in itertools.groupby(springs)]
     spring_counts = [len(x) for x in grouped_items if x[0] == "#"]
     return spring_counts == counts
-
 
 
 def solve_possibilities(springs, counts):
@@ -1041,9 +1042,13 @@ def solve_possibilities(springs, counts):
         binary = binary.zfill(question_marks)
         number_of_ones = binary.count("1")
         if number_of_ones != springs_we_need:
-            debugprint(f"Skipping {i} = {binary} because it has {number_of_ones} ones and there are {springs_we_need} springs that we need")
+            debugprint(
+                f"Skipping {i} = {binary} because it has {number_of_ones} ones and there are {springs_we_need} springs that we need"
+            )
             continue
-        debugprint(f"{i} = {binary} is being checked because it has {number_of_ones} ones and there are {springs_we_need} springs that we need")
+        debugprint(
+            f"{i} = {binary} is being checked because it has {number_of_ones} ones and there are {springs_we_need} springs that we need"
+        )
         springs_copy = springs
         for j in range(question_marks):
             is_spring = binary[j] == "1"
@@ -1068,6 +1073,7 @@ def solve_possibilities(springs, counts):
             possibilities += 1
     return possibilities
 
+
 def parse_line(line):
     line_regex = r"^([\.\?#]+)\s(.*)$"
     matches = re.match(line_regex, line)
@@ -1080,6 +1086,7 @@ def parse_line(line):
     return solve_possibilities(springs, counts)
     return 0
 
+
 def parse_input(input):
     total = 0
     lines = input.splitlines()
@@ -1087,5 +1094,6 @@ def parse_input(input):
         total += parse_line(line)
 
     return total
+
 
 print(parse_input(input))
