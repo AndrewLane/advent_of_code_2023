@@ -117,8 +117,10 @@ def debugprint(*args):
     if debug == True:
         print(*args)
 
+
 def get_pretty_figure(figure):
     return "\n".join(figure)
+
 
 def process_shift(line, shift_direction):
     arr = list(line)
@@ -128,21 +130,22 @@ def process_shift(line, shift_direction):
         for i in range(0, len(arr)):
             if arr[i] == "O":
                 if shift_direction == "left":
-                    if i > 0 and arr[i-1] == ".":
-                        arr[i-1] = "O"
+                    if i > 0 and arr[i - 1] == ".":
+                        arr[i - 1] = "O"
                         arr[i] = "."
                         done_something = True
                 else:
-                    if i < len(arr) - 1 and arr[i+1] == ".":
-                        arr[i+1] = "O"
+                    if i < len(arr) - 1 and arr[i + 1] == ".":
+                        arr[i + 1] = "O"
                         arr[i] = "."
                         done_something = True
             elif arr[i] == "." or arr[i] == "#":
                 pass
             else:
                 raise Exception(f"Unknown character {arr[i]} in line: {line}")
-    
+
     return "".join(arr)
+
 
 def calculate_north_weight(figure):
     transposed_figure = transpose_figure(figure)
@@ -152,25 +155,29 @@ def calculate_north_weight(figure):
         for idx, char in enumerate(line):
             if char == "O":
                 total += line_length - idx
-    
+
     return total
-            
+
 
 def transpose_figure(figure):
     return list(["".join(item) for item in map(list, zip(*figure))])
+
 
 def process_north(figure):
     figure = transpose_figure(figure)
     figure = [process_shift(line, "left") for line in figure]
     return transpose_figure(figure)
 
+
 def process_south(figure):
     figure = transpose_figure(figure)
     figure = [process_shift(line, "right") for line in figure]
     return transpose_figure(figure)
 
+
 def process_east(figure):
     return [process_shift(line, "right") for line in figure]
+
 
 def process_west(figure):
     return [process_shift(line, "left") for line in figure]
@@ -179,15 +186,15 @@ def process_west(figure):
 def calculate_hash_of_figure(figure):
     return hash("".join(figure))
 
-def process_figure(figure):
 
+def process_figure(figure):
     hashes = {}
     north_weights = {}
 
     debugprint(get_pretty_figure(figure))
     debugprint("")
     cycles = 1000000000
-    for cycle in range(1, cycles+1):
+    for cycle in range(1, cycles + 1):
         hash_of_before = calculate_hash_of_figure(figure)
         if hash_of_before in hashes.keys():
             # we found a loop!
@@ -201,7 +208,9 @@ def process_figure(figure):
             debugprint(get_pretty_figure(figure))
             debugprint(f"^^^ should be the same as after cycle {cycle_start}")
 
-            return north_weights[cycle_start + ((cycles - cycle_start) % cycle_loop_length)]
+            return north_weights[
+                cycle_start + ((cycles - cycle_start) % cycle_loop_length)
+            ]
         else:
             figure = process_east(process_south(process_west(process_north(figure))))
             hashes[hash_of_before] = cycle
@@ -211,7 +220,9 @@ def process_figure(figure):
             debugprint(f"North weight after cycle {cycle}: {north_weights[cycle]}")
     return north_weights[cycle]
 
+
 def parse_input(input):
     return process_figure(input.splitlines())
+
 
 print(parse_input(input))

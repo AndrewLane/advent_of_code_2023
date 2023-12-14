@@ -117,8 +117,10 @@ def debugprint(*args):
     if debug == True:
         print(*args)
 
+
 def get_pretty_figure(figure):
     return "\n".join(figure)
+
 
 def process_line(line):
     arr = list(line)
@@ -127,16 +129,17 @@ def process_line(line):
         done_something = False
         for i in range(0, len(arr)):
             if arr[i] == "O":
-                if i > 0 and arr[i-1] == ".":
-                    arr[i-1] = "O"
+                if i > 0 and arr[i - 1] == ".":
+                    arr[i - 1] = "O"
                     arr[i] = "."
                     done_something = True
             elif arr[i] == "." or arr[i] == "#":
                 pass
             else:
                 raise Exception(f"Unknown character {arr[i]} in line: {line}")
-    
+
     return "".join(arr)
+
 
 def calculate_weight(figure):
     total = 0
@@ -145,9 +148,9 @@ def calculate_weight(figure):
         for idx, char in enumerate(line):
             if char == "O":
                 total += line_length - idx
-    
+
     return total
-            
+
 
 def process_figure(figure):
     # transpose figure first because translating left is easier than translating up
@@ -160,7 +163,9 @@ def process_figure(figure):
     debugprint(get_pretty_figure(figure))
     return calculate_weight(figure)
 
+
 def parse_input(input):
     return process_figure(input.splitlines())
+
 
 print(parse_input(input))
