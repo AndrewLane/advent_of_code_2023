@@ -150,15 +150,18 @@ LFJ.FL7LL-LJ|J-7.FFF-L-L-7J7||LL||.||-F---|7|-JFF7F|7-|7F7JFJL-----J-|77LFJJJLJ-
 L7|FJ7L-77|J7--L|-FFFJLFFJ-LJ7.LLL7|.FJ||L7J|7|7J|F|-F7LJ7.FJ|LF--J.F||.|-7.L-||L7.FLJ|FFFJ7L--|FJL77F|LJL-L-J7.J7F.FL-LJ|JJ.L|-7J||.L-|-L7.
 LLJ7LL7-JJJLL-|JJLL-JJLF|J|7.|-7.L---J---7JJF7JF-L-|-F-7LL|JJ-LLJLL7LL-LL-L7.--JL7.LFLJ.FJ.-J.J.|JJ|J-|J.7-|JL-7.L.FJ--J-|-7-JJLF--|J..-.LLJ"""
 
+
 class DirectionWeAreHeadedIn(Enum):
     UP = 1
     DOWN = 2
     LEFT = 3
     RIGHT = 4
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
+
 
 input_grid = input.splitlines()
 debugprint(input)
@@ -172,7 +175,7 @@ def find_starting_point_and_size_of_land(lines):
         if position_of_s != -1:
             x = position_of_s
             y = line_index
-    
+
     if x < 0 or y < 0:
         raise Exception("No starting point found")
     return x, y, len(lines[0]), len(lines)
@@ -190,6 +193,7 @@ def is_direction_still_within_the_grid(x, y, num_cols, num_rows, direction):
     else:
         raise Exception("Unknown direction")
 
+
 def get_next_pipe_coordinates(x, y, direction):
     if direction == DirectionWeAreHeadedIn.UP:
         return x, y - 1
@@ -201,12 +205,13 @@ def get_next_pipe_coordinates(x, y, direction):
         return x + 1, y
     else:
         raise Exception("Unknown direction")
-    
+
+
 def does_pipe_align_with_direction_and_if_so_which_way(pipe, direction):
     if direction == DirectionWeAreHeadedIn.UP:
         if pipe == "|":
             return True, DirectionWeAreHeadedIn.UP
-        elif  pipe == "F":
+        elif pipe == "F":
             return True, DirectionWeAreHeadedIn.RIGHT
         elif pipe == "7":
             return True, DirectionWeAreHeadedIn.LEFT
@@ -215,7 +220,7 @@ def does_pipe_align_with_direction_and_if_so_which_way(pipe, direction):
     elif direction == DirectionWeAreHeadedIn.DOWN:
         if pipe == "|":
             return True, DirectionWeAreHeadedIn.DOWN
-        elif  pipe == "J":
+        elif pipe == "J":
             return True, DirectionWeAreHeadedIn.LEFT
         elif pipe == "L":
             return True, DirectionWeAreHeadedIn.RIGHT
@@ -224,7 +229,7 @@ def does_pipe_align_with_direction_and_if_so_which_way(pipe, direction):
     elif direction == DirectionWeAreHeadedIn.LEFT:
         if pipe == "L":
             return True, DirectionWeAreHeadedIn.UP
-        elif  pipe == "-":
+        elif pipe == "-":
             return True, DirectionWeAreHeadedIn.LEFT
         elif pipe == "F":
             return True, DirectionWeAreHeadedIn.DOWN
@@ -233,7 +238,7 @@ def does_pipe_align_with_direction_and_if_so_which_way(pipe, direction):
     elif direction == DirectionWeAreHeadedIn.RIGHT:
         if pipe == "J":
             return True, DirectionWeAreHeadedIn.UP
-        elif  pipe == "-":
+        elif pipe == "-":
             return True, DirectionWeAreHeadedIn.RIGHT
         elif pipe == "7":
             return True, DirectionWeAreHeadedIn.DOWN
@@ -242,25 +247,39 @@ def does_pipe_align_with_direction_and_if_so_which_way(pipe, direction):
     else:
         raise Exception("Unknown direction")
 
+
 def traverse(x, y, num_cols, num_rows, direction=None, depth=0):
-    debugprint("We are at", x, y, "and we are headed", direction, "with a depth of", depth)
+    debugprint(
+        "We are at", x, y, "and we are headed", direction, "with a depth of", depth
+    )
 
     if direction == None:
         for first_direction in DirectionWeAreHeadedIn:
             debugprint("Trying", first_direction, "as the first direction")
-            traversal_length = traverse(x, y, num_cols, num_rows, first_direction, depth)
+            traversal_length = traverse(
+                x, y, num_cols, num_rows, first_direction, depth
+            )
             if traversal_length > 0:
-                return traversal_length            
+                return traversal_length
     else:
         while True:
-            if not is_direction_still_within_the_grid(x, y, num_cols, num_rows, direction):
+            if not is_direction_still_within_the_grid(
+                x, y, num_cols, num_rows, direction
+            ):
                 return -1
             next_pipe_x, next_pipe_y = get_next_pipe_coordinates(x, y, direction)
             pipe_along_path = input_grid[next_pipe_y][next_pipe_x]
             if pipe_along_path == "S":
-                debugprint("Found the starting point at depth", depth+1, "so we are done")
-                return math.ceil((depth+1) / 2)
-            alignment, next_direction = does_pipe_align_with_direction_and_if_so_which_way(pipe_along_path, direction)
+                debugprint(
+                    "Found the starting point at depth", depth + 1, "so we are done"
+                )
+                return math.ceil((depth + 1) / 2)
+            (
+                alignment,
+                next_direction,
+            ) = does_pipe_align_with_direction_and_if_so_which_way(
+                pipe_along_path, direction
+            )
             if alignment == True:
                 x = next_pipe_x
                 y = next_pipe_y
@@ -268,13 +287,25 @@ def traverse(x, y, num_cols, num_rows, direction=None, depth=0):
                 depth += 1
             else:
                 return -1
-    
-
 
 
 def parse_input(input):
-    starting_point_x, starting_point_y, num_cols, num_rows = find_starting_point_and_size_of_land(input_grid)
-    debugprint(starting_point_x, starting_point_y, "is our starting point on a", num_cols, "x", num_rows, "grid")
+    (
+        starting_point_x,
+        starting_point_y,
+        num_cols,
+        num_rows,
+    ) = find_starting_point_and_size_of_land(input_grid)
+    debugprint(
+        starting_point_x,
+        starting_point_y,
+        "is our starting point on a",
+        num_cols,
+        "x",
+        num_rows,
+        "grid",
+    )
     return traverse(starting_point_x, starting_point_y, num_cols, num_rows)
+
 
 print(parse_input(input))
