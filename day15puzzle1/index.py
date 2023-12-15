@@ -2,7 +2,7 @@ debug = True
 
 input = """rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7"""
 
-input ="""tjs=7,
+input = """tjs=7,
 gkhf=2,
 rt-,
 jfkgv-,
@@ -4003,17 +4003,20 @@ xhj-,
 fcv=6,
 zj-"""
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
+
 
 def parse_input(input):
     individual_strings = input.replace("\n", "").replace("\r", "").split(",")
     total = 0
     for item in individual_strings:
         total += my_hash(item)
-    
+
     return total
+
 
 def my_hash(input):
     hash_value = 0
@@ -4025,4 +4028,3 @@ def my_hash(input):
 
 
 print(parse_input(input))
-

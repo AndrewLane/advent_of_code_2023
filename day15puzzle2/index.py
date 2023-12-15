@@ -2,7 +2,7 @@ debug = False
 
 input = """rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7"""
 
-input ="""tjs=7,
+input = """tjs=7,
 gkhf=2,
 rt-,
 jfkgv-,
@@ -4003,21 +4003,24 @@ xhj-,
 fcv=6,
 zj-"""
 
+
 def debugprint(*args):
     if debug == True:
         print(*args)
+
 
 def remove_from_box_if_present(boxes, box_idx, label):
     for item in boxes[box_idx]:
         if item.get("label") == label:
             boxes[box_idx].remove(item)
 
+
 def add_to_box(boxes, box_idx, label, value):
     for item in boxes[box_idx]:
         if item.get("label") == label:
             item["value"] = value
             return
-    
+
     # add the item to the end of the array
     boxes[box_idx].append({"label": label, "value": value})
 
@@ -4043,8 +4046,8 @@ def parse_input(input):
     total = 0
     for idx, box in enumerate(boxes):
         for box_idx, item in enumerate(box):
-            total += ((idx + 1) * (item.get("value")) * (box_idx + 1))
-    
+            total += (idx + 1) * (item.get("value")) * (box_idx + 1)
+
     return total
 
 
@@ -4056,5 +4059,5 @@ def my_hash(input):
         hash_value = hash_value % 256
     return hash_value
 
-print(parse_input(input))
 
+print(parse_input(input))
